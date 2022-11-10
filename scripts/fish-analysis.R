@@ -7,3 +7,9 @@ fish_data_cat <- fish_data %>%
 
 fish_data_cat <- fish_data %>%
   mutate(length_cat = ifelse(length > 300, "big", "small"))
+
+
+install.packages("ggplot2")
+library(ggplot2)
+
+ggplot(data = fish_data_cat, mapping = aes(x = length, y = scalelength, color = lakeid))
