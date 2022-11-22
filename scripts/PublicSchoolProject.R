@@ -14,10 +14,17 @@ district_race <- ClassSizebyEthnicity %>%
 
 artcourse <- read.csv("raw_data/artcourse.csv")
 
+
+
+
 art_course_taken <- artcourse %>%
   select(District.Name, All.Grades, Total.Students) %>%
-  group_by(District.Name) %>%
-  #mutate(percent_students_in_art = All.Grades / "Total.Students")
+  mutate(percent_students_in_art = All.Grades / Total.Students)
+
+artcourse
+
+
+
 #I cant get this to work but the goal was to get a new column with percent 
 #students in art class and then add that to the district race data set
 
