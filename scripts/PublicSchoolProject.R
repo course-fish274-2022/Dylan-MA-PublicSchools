@@ -19,7 +19,7 @@ artcourse <- read.csv("raw_data/artcourse.csv")
 
 art_course_taken <- artcourse %>%
   select(District.Name, All.Grades, Total.Students) %>%
-  mutate(percent_students_in_art = All.Grades / Total.Students)
+  mutate(percent_students_in_art = (All.Grades / Total.Students)*100)
 
 artcourse
 
@@ -31,9 +31,10 @@ artcourse
 sat_performance <- read.csv("raw_data/sat_performance.csv")
   
 
- sat_art <- select(sat_performance, -District.Code, -Reading...Writing, -Writing,-Math) %>%
+ sat_art <- select(sat_performance, Tests.Taken, District.Name) %>%
   inner_join(art_course_taken, by = "District.Name")
 
+ 
  art_sat_race <- inner_join(sat_art,district_race, by = "District.Name") %>%
    select(-African.American.., -Hispanic..)
 #I added how many students took sat to this data so that I can divide it by
@@ -51,6 +52,11 @@ grouped_data <- read.csv("raw_data/TeacherSalaries.csv") %>%
   inner_join(cheese, by = "District.Name")
 #added average salary, completing my data set for now
 #I ended up losing a good amount of data points, so I'll see how it goes
+
+
+proportion_data <- mutate(grouped_data, percent_take_sat = (Tests.Taken/Total.Students)*100) %>%
+  mutate(percent_disciplined = (Students.Disciplined / Total.Students)*100)%>%
+  select(-Students.Disciplined, -Tests.Taken, -All.Grades)
 
 ggplot(grouped_data, aes(percent_black_hispanic,Average.Salary))+
   geom_point()
