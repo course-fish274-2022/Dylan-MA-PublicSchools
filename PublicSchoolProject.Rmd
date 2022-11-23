@@ -1,5 +1,5 @@
 ---
-title: "PublicSchoolProject"
+title: "MA Public School Project"
 output: html_document
 date: '2022-11-22'
 ---
@@ -13,26 +13,87 @@ action, and teacher salaries?
 
 In this document I will:
 
-1. Load data from the [Portal Project Teaching Database](http://figshare.com/articles/Portal_Project_Teaching_Database/1314459)
-2. Process it into population time series
+1. Load data from the [Massachusetts School and District Data](https://www.doe.mass.edu/SchDistrictData.html)
+2. Process different variables into one data set
 3. And make initial visualizations
 
 ## Required Packages
 
-```{r}
+```{r, include=FALSE}
 library(dplyr)
 library(ggplot2)
-install.packages("Markdown")
+```
 
 
-## Data
-
+## Data Manipulation
+Load in ethnicity data and add a column for African American & Hispanic.
 ```{r}
-data <- read.csv("https://ndownloader.figshare.com/files/2292172")
-head(data)
+ClassSizebyEthnicity <- read.csv("raw_data/ClassSizebyRaceEthnicity.csv")
 ```
 
 ```{r, cache=TRUE}
-data <- read.csv("https://ndownloader.figshare.com/files/2292172")
-head(data)
+district_race <- ClassSizebyEthnicity %>%
+  select(District.Name, African.American.., Hispanic.., White..) %>%
+  group_by(District.Name) %>%
+  mutate(percent_black_hispanic = sum(African.American.., Hispanic.., na.rm = TRUE ))
+```
+
+Read in data for art courses taken and add a column for percent of students that take art classes.
+```{r cache=TRUE}
+artcourse <- read.csv("raw_data/artcourse.csv")
+```
+
+
+```{r, cache=TRUE}
+art_course_taken <- artcourse %>%
+  select(District.Name, All.Grades, Total.Students) %>%
+  mutate(percent_students_in_art = (All.Grades / Total.Students)*100)
+```
+
+Read in sat performance data and join it with art course data, then join that data set to ethnicity data set.
+```{r cache=TRUE}
+sat_performance <- read.csv("raw_data/sat_performance.csv")
+```
+
+```{r cache=TRUE}
+ sat_art <- select(sat_performance, Tests.Taken, District.Name) %>%
+  inner_join(art_course_taken, by = "District.Name")
+```
+
+```{r cache=TRUE}
+ art_sat_race <- inner_join(sat_art,district_race, by = "District.Name") %>%
+   select(-African.American.., -Hispanic..)
+```
+
+Read in student discipline data and join it to the above data set
+```{r, cache= TRUE}
+cheese <- read.csv("raw_data/StudentDisciplineDataReport.csv") %>%
+  select(District.Name, Students.Disciplined) %>%
+  inner_join(art_sat_race, by = "District.Name")
+```
+
+Read in teacher salary data and join it to the above data set
+```{r, cache= TRUE}
+grouped_data <- read.csv("raw_data/TeacherSalaries.csv") %>%
+  select(District.Name,Average.Salary) %>%
+  inner_join(cheese, by = "District.Name")
+```
+
+Change sat and student discipline data to proportions.
+```{r, cache= TRUE}
+proportion_data <- mutate(grouped_data, percent_take_sat = (Tests.Taken/Total.Students)*100) %>%
+  mutate(percent_disciplined = (Students.Disciplined / Total.Students)*100)%>%
+  select(-Students.Disciplined, -Tests.Taken, -All.Grades)
+```
+
+## Data Plots
+```{r,echo=FALSE}
+knitr::kable(
+  proportion_data[1:5, ], 
+  caption = "proportion data set"
+)
+
+```{r, echo= FALSE, message=FALSE}
+ggplot(grouped_data, aes(percent_black_hispanic))+
+  geom_histogram()
 ```
