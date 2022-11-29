@@ -62,24 +62,23 @@ write.csv(proportion_data,"clean_data/Proportion_Data.csv", row.names = FALSE)
 
 #new data set with all districts less than 5%, between 5 & 30, 
 #between 30 and 50, and above 50 percent black and hispanic.
-grouped_by_poc5 <- group_by(proportion_data, percent_black_hispanic) %>%
-  filter(percent_black_hispanic < 5)
-
-grouped_by_poc5_30 <- group_by(proportion_data, percent_black_hispanic) %>%
-  filter( percent_black_hispanic >5) %>%
-  filter( percent_black_hispanic <30)
-
-grouped_by_poc30_50 <- group_by(proportion_data, percent_black_hispanic) %>%
-  filter( percent_black_hispanic >30) %>%
-  filter( percent_black_hispanic <50)
-
-grouped_by_poc50 <- group_by(proportion_data, percent_black_hispanic) %>%
-  filter( percent_black_hispanic >50)
+grouped_by_poc <- mutate(proportion_data, percent_poc = case_when(
+  percent_black_hispanic < 5  ~ " <5%",
+  percent_black_hispanic > 5 | percent_black_hispanic <30 ~ ">5% & <30%",
+  percent_black_hispanic > 30 | percent_black_hispanic <50 ~ ">30% & <50%",
+  percent_black_hispanic >50 ~ ">50%"))
+                           
 
 #got workable data set
 
 
 #start graphing
+
+
+ggplot(data = grouped_by_poc, mapping=aes(x = Average.Salary)+
+         facet_wrap(vars(percent_poc))
+
+
 ggplot(grouped_data, aes(percent_black_hispanic,Average.Salary))+
   geom_point()
 #dont know whats going on here but ok

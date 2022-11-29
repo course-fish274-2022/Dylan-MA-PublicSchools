@@ -14,4 +14,6 @@ Goals for the coming weeks!!!
 1. Do group by for percent poc students to create a data set that I can make some bar graphs
 with. Then make a bunch of comparable graphs using facetgrid.
 
-2. See if I can ask some more questions about the percent data.
+2. bar graphs for each bin, with multiple average percent bars on one graph each of a different facet
+
+3. one graph with bins on the x axis that shows average teacher salary for each bin on the same graph
