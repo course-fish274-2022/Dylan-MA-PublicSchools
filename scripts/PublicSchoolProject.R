@@ -58,6 +58,24 @@ proportion_data <- mutate(grouped_data, percent_take_sat = (Tests.Taken/Total.St
   select(-Students.Disciplined, -Tests.Taken, -All.Grades)
 
 write.csv(proportion_data,"clean_data/Proportion_Data.csv", row.names = FALSE)
+
+
+#new data set with all districts less than 5%, between 5 & 30, 
+#between 30 and 50, and above 50 percent black and hispanic.
+grouped_by_poc5 <- group_by(proportion_data, percent_black_hispanic) %>%
+  filter(percent_black_hispanic < 5)
+
+grouped_by_poc5_30 <- group_by(proportion_data, percent_black_hispanic) %>%
+  filter( percent_black_hispanic >5) %>%
+  filter( percent_black_hispanic <30)
+
+grouped_by_poc30_50 <- group_by(proportion_data, percent_black_hispanic) %>%
+  filter( percent_black_hispanic >30) %>%
+  filter( percent_black_hispanic <50)
+
+grouped_by_poc50 <- group_by(proportion_data, percent_black_hispanic) %>%
+  filter( percent_black_hispanic >50)
+
 #got workable data set
 
 
