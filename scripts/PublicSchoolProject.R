@@ -1,5 +1,7 @@
 library(dplyr)
 library(ggplot2)
+install.packages("tidyverse")
+library(tidyverse)
 
 # I already did cosmetic changes to my data in excel in order to convert
 # to csv and make things easier to read in
@@ -62,7 +64,7 @@ write.csv(proportion_data,"clean_data/Proportion_Data.csv", row.names = FALSE)
 
 #new data set with all districts less than 5%, between 5 & 30, 
 #between 30 and 50, and above 50 percent black and hispanic.
-grouped_by_poc <- mutate(proportion_data, percent_poc = case_when(
+proportion_data_wclass <- mutate(proportion_data, percent_poc = case_when(
   percent_black_hispanic <= 5  ~ " <5%",
   percent_black_hispanic > 5 & percent_black_hispanic <30 ~ ">5% & <30%",
   percent_black_hispanic > 30 & percent_black_hispanic <50 ~ ">30% & <50%",
@@ -70,23 +72,38 @@ grouped_by_poc <- mutate(proportion_data, percent_poc = case_when(
                            
 
 #got workable data set
-
-
+#would love to get this in a better order
+ grouped_by_poc <- group_by(proportion_data_wclass, percent_poc) %>%
+   summarise(percent_students_in_art = mean(percent_students_in_art),
+             percent_take_sat = mean(percent_take_sat),
+             percent_disciplined= mean(percent_disciplined),
+             average_salary = mean(Average.Salary)) 
+  
 #start graphing
 
 
 
-
-ggplot(grouped_by_poc,aes(x = Total.Students)) +
-         geom_histogram() +
-         facet_wrap(~percent_poc)
+#plot for average salary
+ #would love to get these in a better order
+ggplot(proportion_data_wclass,aes(x = percent_poc, y = Average.Salary, color=percent_poc) )+
+  geom_boxplot()
         
+ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_students_in_art, color=percent_poc))+
+  geom_boxplot()
+
+ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_take_sat, color=percent_poc) )+
+  geom_boxplot()
+
+ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_disciplined, color=percent_poc) )+
+  geom_boxplot()
 
 
-ggplot(grouped_data, aes(percent_black_hispanic,Average.Salary))+
+ggplot(proportion_data_wclass,aes(x = percent_disciplined, percent_students_in_art,
+                                 color=percent_poc) )+
   geom_point()
-#dont know whats going on here but ok
 
+
+
+#simple histogram to show spread in racial makeup
 ggplot(grouped_data, aes(percent_black_hispanic))+
   geom_histogram()
-#simple histogram to show spread in racial makeup
