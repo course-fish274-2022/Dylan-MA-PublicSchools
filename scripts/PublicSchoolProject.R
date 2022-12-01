@@ -75,8 +75,9 @@ grouped_by_poc <- mutate(proportion_data, percent_poc = case_when(
 #start graphing
 
 
-ggplot(data = grouped_by_poc, mapping=aes(x = Average.Salary)+
-         facet_wrap(vars(percent_poc))
+ggplot(grouped_by_poc, mapping=aes(x = Average.Salary)+
+         geom_bar()
+        
 
 
 ggplot(grouped_data, aes(percent_black_hispanic,Average.Salary))+
