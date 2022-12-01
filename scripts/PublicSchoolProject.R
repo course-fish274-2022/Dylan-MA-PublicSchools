@@ -63,10 +63,10 @@ write.csv(proportion_data,"clean_data/Proportion_Data.csv", row.names = FALSE)
 #new data set with all districts less than 5%, between 5 & 30, 
 #between 30 and 50, and above 50 percent black and hispanic.
 grouped_by_poc <- mutate(proportion_data, percent_poc = case_when(
-  percent_black_hispanic < 5  ~ " <5%",
-  percent_black_hispanic > 5 | percent_black_hispanic <30 ~ ">5% & <30%",
-  percent_black_hispanic > 30 | percent_black_hispanic <50 ~ ">30% & <50%",
-  percent_black_hispanic >50 ~ ">50%"))
+  percent_black_hispanic <= 5  ~ " <5%",
+  percent_black_hispanic > 5 & percent_black_hispanic <30 ~ ">5% & <30%",
+  percent_black_hispanic > 30 & percent_black_hispanic <50 ~ ">30% & <50%",
+  percent_black_hispanic >= 50 ~ ">50%"))
                            
 
 #got workable data set
@@ -75,8 +75,11 @@ grouped_by_poc <- mutate(proportion_data, percent_poc = case_when(
 #start graphing
 
 
-ggplot(grouped_by_poc, mapping=aes(x = Average.Salary)+
-         geom_bar()
+
+
+ggplot(grouped_by_poc,aes(x = Total.Students)) +
+         geom_histogram() +
+         facet_wrap(~percent_poc)
         
 
 
