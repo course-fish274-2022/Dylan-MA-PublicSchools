@@ -3,6 +3,7 @@ title: "How Does Racial-Makeup of a School District Affect it's Different Metric
 output: ioslides_presentation
 ---
 
+
 ## Required Packages
 
 ```{r, echo=FALSE, message=FALSE}
@@ -17,7 +18,7 @@ library(ggplot2)
 Histogram of the racial makeup of Mass school districts
 ```{r, echo=FALSE, message=FALSE}
 
-ClassSizebyEthnicity <- read.csv("raw_data/ClassSizebyRaceEthnicity.csv")
+ClassSizebyEthnicity <- read.csv("../raw_data/ClassSizebyRaceEthnicity.csv")
 
 district_race <- ClassSizebyEthnicity %>%
   select(District.Name, African.American.., Hispanic.., White..) %>%
@@ -26,7 +27,7 @@ district_race <- ClassSizebyEthnicity %>%
 
 
 
-artcourse <- read.csv("raw_data/artcourse.csv")
+artcourse <- read.csv("../raw_data/artcourse.csv")
 
 art_course_taken <- artcourse %>%
   select(District.Name, All.Grades, Total.Students) %>%
@@ -34,7 +35,7 @@ art_course_taken <- artcourse %>%
 
 
 
-sat_performance <- read.csv("raw_data/sat_performance.csv")
+sat_performance <- read.csv("../raw_data/sat_performance.csv")
   
 sat_art <- select(sat_performance, Tests.Taken, District.Name) %>%
   inner_join(art_course_taken, by = "District.Name")
@@ -44,14 +45,14 @@ art_sat_race <- inner_join(sat_art,district_race, by = "District.Name") %>%
 
  
 
-cheese <- read.csv("raw_data/StudentDisciplineDataReport.csv") %>%
+cheese <- read.csv("../raw_data/StudentDisciplineDataReport.csv") %>%
   select(District.Name, Students.Disciplined) %>%
   inner_join(art_sat_race, by = "District.Name")
 
 
 
 
-grouped_data <- read.csv("raw_data/TeacherSalaries.csv") %>%
+grouped_data <- read.csv("../raw_data/TeacherSalaries.csv") %>%
   select(District.Name,Average.Salary) %>%
   inner_join(cheese, by = "District.Name")
 
@@ -70,6 +71,13 @@ proportion_data_wclass <- mutate(proportion_data, percent_poc = case_when(
   percent_black_hispanic > 30 & percent_black_hispanic <50 ~ ">30% & <50%",
   percent_black_hispanic >= 50 ~ ">50%"))
 
+grouped_by_poc <- group_by(proportion_data_wclass, percent_poc) %>%
+   summarise(percent_students_in_art = mean(percent_students_in_art),
+             percent_take_sat = mean(percent_take_sat),
+             percent_disciplined= mean(percent_disciplined),
+             average_salary = mean(Average.Salary)) 
+  
+
 ggplot(grouped_data, aes(percent_black_hispanic))+
   geom_histogram()
 ```
@@ -85,9 +93,86 @@ action, and teacher salaries?
 
 ## Data Sets Used
 
+All proportion data is made using the number of total students in the district.
 ```{r}
 knitr::kable(
   proportion_data_wclass[1:5, ], 
   caption = "proportion data set"
 )
+
+knitr::kable(
+  grouped_by_poc[1:4, ], 
+  caption = "grouped_by averages"
+)
 ```
+
+## Data Limitations
+
+1. The different percent poc groups assigned to the school districts are of drastically different sizes. Due to the predominant whiteness of Massachuesetts, there are few school districts with over 50% poc students.
+
+2. Percent of students taking the sat seems small for all school districts because I divided the number of students who took the SAT by the total students in the district.
+
+3. Data represents only public schools.
+
+## Average Salary
+
+little difference is seen amongst different percent groups. Could represent good allocation of state funds.
+
+```{r, echo=FALSE}
+ggplot(proportion_data_wclass,aes(x = percent_poc, y = Average.Salary, color=percent_poc) )+
+  geom_boxplot()
+```
+
+## Students in Art Classes
+
+Data does show a slight decrease in percent of students in art classes in higher percentile poc groups, though there is significant variance.
+
+
+```{r, echo=FALSE}
+ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_students_in_art, color=percent_poc))+
+  geom_boxplot()
+```
+
+## Students That Take The SAT
+
+Similar to the previous graph, there is a slight decreases with higher percentile poc groups, and also high variance in the data.
+
+
+```{r, echo=FALSE}
+ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_take_sat, color=percent_poc) )+
+  geom_boxplot()
+```
+
+## Further Breakdown of SAT Participation
+
+```{r, echo=FALSE}
+ggplot(proportion_data_wclass,aes(x = percent_black_hispanic, y = percent_take_sat) )+
+  geom_point(mapping =aes(color=percent_poc)) +
+  geom_smooth()
+```
+
+## Student Discipline
+
+This represents any noted discipline; severity of disciplinary action is not a factor. This graph shows the most prominent trend.
+
+```{r, echo=FALSE}
+ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_disciplined, color=percent_poc) )+
+  geom_boxplot()
+```
+
+## Further Breakdown of Disciplinary Action
+
+```{r, echo=FALSE}
+ggplot(proportion_data_wclass,aes(x = percent_black_hispanic, y = percent_disciplined) )+
+  geom_point(mapping =aes(color=percent_poc)) +
+  geom_smooth()
+```
+
+## Conclusion
+
+There are aspects of the data that show trends. Though average teacher salary remains relatively consistent amongst school districts, other performance metrics of the schools, like sat participation and disciplinary action do tend to decrease and increase respectively with larger poc student bodies. Moving forwards I would love to  analyze private school data, and delve more into specific disciplinary action that is handed out. For example, are some schools more likely to call the police on a student? 
+
+## References 
+
+School and District Profiles for The State of Massachusetts
+(https://profiles.doe.mass.edu/)
