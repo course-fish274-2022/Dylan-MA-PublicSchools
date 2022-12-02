@@ -1,7 +1,6 @@
 library(dplyr)
 library(ggplot2)
-install.packages("tidyverse")
-library(tidyverse)
+
 
 # I already did cosmetic changes to my data in excel in order to convert
 # to csv and make things easier to read in
@@ -79,7 +78,8 @@ proportion_data_wclass <- mutate(proportion_data, percent_poc = case_when(
              percent_disciplined= mean(percent_disciplined),
              average_salary = mean(Average.Salary)) 
   
-#start graphing
+
+ #start graphing
 
 
 
@@ -98,9 +98,9 @@ ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_disciplined, colo
   geom_boxplot()
 
 
-ggplot(proportion_data_wclass,aes(x = percent_disciplined, percent_students_in_art,
-                                 color=percent_poc) )+
-  geom_point()
+ggplot(proportion_data_wclass,aes(x = percent_black_hispanic, y = percent_take_sat) )+
+  geom_point(mapping =aes(color=percent_poc)) +
+  geom_smooth()
 
 
 

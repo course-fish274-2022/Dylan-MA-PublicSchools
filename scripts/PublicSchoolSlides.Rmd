@@ -1,0 +1,93 @@
+---
+title: "How Does Racial-Makeup of a School District Affect it's Different Metrics?"
+output: ioslides_presentation
+---
+
+## Required Packages
+
+```{r, echo=FALSE, message=FALSE}
+library(dplyr)
+library(ggplot2)
+```
+
+## Massachusett's Public Schools
+
+!(https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.bpsma.org%2Fuploaded%2FMedia-Press%2F2017-2018%2FNewsletter%2FNewsletter.html&psig=AOvVaw1GW_Z1Myh262JN6qKb5FFS&ust=1670094999619000&source=images&cd=vfe&ved=0CA8QjRxqFwoTCPiS3e3S2_sCFQAAAAAdAAAAABAI)
+
+Histogram of the racial makeup of Mass school districts
+```{r, echo=FALSE, message=FALSE}
+
+ClassSizebyEthnicity <- read.csv("raw_data/ClassSizebyRaceEthnicity.csv")
+
+district_race <- ClassSizebyEthnicity %>%
+  select(District.Name, African.American.., Hispanic.., White..) %>%
+  group_by(District.Name) %>%
+  mutate(percent_black_hispanic = sum(African.American.., Hispanic.., na.rm = TRUE ))
+
+
+
+artcourse <- read.csv("raw_data/artcourse.csv")
+
+art_course_taken <- artcourse %>%
+  select(District.Name, All.Grades, Total.Students) %>%
+  mutate(percent_students_in_art = (All.Grades / Total.Students)*100)
+
+
+
+sat_performance <- read.csv("raw_data/sat_performance.csv")
+  
+sat_art <- select(sat_performance, Tests.Taken, District.Name) %>%
+  inner_join(art_course_taken, by = "District.Name")
+
+art_sat_race <- inner_join(sat_art,district_race, by = "District.Name") %>%
+   select(-African.American.., -Hispanic..)
+
+ 
+
+cheese <- read.csv("raw_data/StudentDisciplineDataReport.csv") %>%
+  select(District.Name, Students.Disciplined) %>%
+  inner_join(art_sat_race, by = "District.Name")
+
+
+
+
+grouped_data <- read.csv("raw_data/TeacherSalaries.csv") %>%
+  select(District.Name,Average.Salary) %>%
+  inner_join(cheese, by = "District.Name")
+
+
+
+
+proportion_data <- mutate(grouped_data, percent_take_sat = (Tests.Taken/Total.Students)*100) %>%
+  mutate(percent_disciplined = (Students.Disciplined / Total.Students)*100)%>%
+  select(-Students.Disciplined, -Tests.Taken, -All.Grades)
+
+
+
+proportion_data_wclass <- mutate(proportion_data, percent_poc = case_when(
+  percent_black_hispanic <= 5  ~ " <5%",
+  percent_black_hispanic > 5 & percent_black_hispanic <30 ~ ">5% & <30%",
+  percent_black_hispanic > 30 & percent_black_hispanic <50 ~ ">30% & <50%",
+  percent_black_hispanic >= 50 ~ ">50%"))
+
+ggplot(grouped_data, aes(percent_black_hispanic))+
+  geom_histogram()
+```
+
+## Two questions 
+
+
+1) Does the ethnicity make up
+of a school district effect art courses offered, sat performance, disciplinary 
+action, and teacher salaries?
+
+2) What limits the data from clearly answering the above questions?
+
+## Data Sets Used
+
+```{r}
+knitr::kable(
+  proportion_data_wclass[1:5, ], 
+  caption = "proportion data set"
+)
+```
