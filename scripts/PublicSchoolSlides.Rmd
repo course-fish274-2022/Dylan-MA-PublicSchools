@@ -19,7 +19,7 @@ library(ggplot2)
 
 <img src="https://www.bpsma.org/uploaded/Media-Press/2017-2018/Newsletter/Newsletter/rolling-rally.jpg" alt="schoolkids" style="width:500px;height:300px;">
 
-image from 
+image from Brokton Public Schools
 
 
 ## Racial Makeup
@@ -108,7 +108,11 @@ knitr::kable(
   proportion_data_wclass[1:5, ], 
   caption = "proportion data set"
 )
+```
 
+
+## Grouped_by Data
+```{r, echo=FALSE}
 knitr::kable(
   grouped_by_poc[1:4, ], 
   caption = "grouped_by averages"
@@ -129,7 +133,8 @@ little difference is seen amongst different percent groups. Could represent good
 
 ```{r, echo=FALSE}
 ggplot(proportion_data_wclass,aes(x = percent_poc, y = Average.Salary, color=percent_poc) )+
-  geom_boxplot()
+  geom_boxplot()+
+  scale_x_discrete(limits = c(" <5%",">5% & <30%",">30% & <50%",">50%"))
 ```
 
 ## Students in Art Classes
@@ -139,7 +144,8 @@ Data does show a slight decrease in percent of students in art classes in higher
 
 ```{r, echo=FALSE}
 ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_students_in_art, color=percent_poc))+
-  geom_boxplot()
+  geom_boxplot()+
+  scale_x_discrete(limits = c(" <5%",">5% & <30%",">30% & <50%",">50%"))
 ```
 
 ## Students That Take The SAT
@@ -149,7 +155,8 @@ Similar to the previous graph, there is a slight decreases with higher percentil
 
 ```{r, echo=FALSE}
 ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_take_sat, color=percent_poc) )+
-  geom_boxplot()
+  geom_boxplot()+
+  scale_x_discrete(limits = c(" <5%",">5% & <30%",">30% & <50%",">50%"))
 ```
 
 ## Further Breakdown of SAT Participation
@@ -166,7 +173,8 @@ This represents any noted discipline; severity of disciplinary action is not a f
 
 ```{r, echo=FALSE}
 ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_disciplined, color=percent_poc) )+
-  geom_boxplot()
+  geom_boxplot()+
+  scale_x_discrete(limits = c(" <5%",">5% & <30%",">30% & <50%",">50%"))
 ```
 
 ## Further Breakdown of Disciplinary Action
