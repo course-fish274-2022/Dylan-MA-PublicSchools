@@ -17,3 +17,13 @@ with. Then make a bunch of comparable graphs using facetgrid.
 2. bar graphs for each bin, with multiple average percent bars on one graph each of a different facet
 
 3. one graph with bins on the x axis that shows average teacher salary for each bin on the same graph
+
+Directory--------
+
+clean_data: manipulated data sets
+
+figures: generated figures
+
+raw-data: origional data sets
+
+scripts: all markdown and script files/ all code

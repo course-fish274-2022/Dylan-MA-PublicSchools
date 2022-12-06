@@ -1,19 +1,20 @@
 ---
 title: "How Does Racial-Makeup of a School District Affect it's Different Metrics?"
 output: ioslides_presentation
+date: '2022-11-29'
 ---
 
 
 ## Required Packages
 
-```{r, echo=FALSE, message=FALSE}
+```{r, message=FALSE}
 library(dplyr)
 library(ggplot2)
 ```
 
 ## Massachusett's Public Schools
 
-!(https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.bpsma.org%2Fuploaded%2FMedia-Press%2F2017-2018%2FNewsletter%2FNewsletter.html&psig=AOvVaw1GW_Z1Myh262JN6qKb5FFS&ust=1670094999619000&source=images&cd=vfe&ved=0CA8QjRxqFwoTCPiS3e3S2_sCFQAAAAAdAAAAABAI)
+![](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.bpsma.org%2Fuploaded%2FMedia-Press%2F2017-2018%2FNewsletter%2FNewsletter.html&psig=AOvVaw1GW_Z1Myh262JN6qKb5FFS&ust=1670094999619000&source=images&cd=vfe&ved=0CA8QjRxqFwoTCPiS3e3S2_sCFQAAAAAdAAAAABAI)
 
 Histogram of the racial makeup of Mass school districts
 ```{r, echo=FALSE, message=FALSE}
@@ -94,7 +95,7 @@ action, and teacher salaries?
 ## Data Sets Used
 
 All proportion data is made using the number of total students in the district.
-```{r}
+```{r, echo=FALSE}
 knitr::kable(
   proportion_data_wclass[1:5, ], 
   caption = "proportion data set"
@@ -145,7 +146,7 @@ ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_take_sat, color=p
 
 ## Further Breakdown of SAT Participation
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, message=FALSE}
 ggplot(proportion_data_wclass,aes(x = percent_black_hispanic, y = percent_take_sat) )+
   geom_point(mapping =aes(color=percent_poc)) +
   geom_smooth()
@@ -162,7 +163,7 @@ ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_disciplined, colo
 
 ## Further Breakdown of Disciplinary Action
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, message=FALSE}
 ggplot(proportion_data_wclass,aes(x = percent_black_hispanic, y = percent_disciplined) )+
   geom_point(mapping =aes(color=percent_poc)) +
   geom_smooth()
