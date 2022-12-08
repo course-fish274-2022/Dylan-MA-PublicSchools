@@ -88,7 +88,8 @@ grouped_by_poc <- group_by(proportion_data_wclass, percent_poc) %>%
   
 
 ggplot(grouped_data, aes(percent_black_hispanic))+
-  geom_histogram()
+  geom_histogram()+
+  labs(x="% Black & Hispanic")
 ```
 
 ## Two questions 
@@ -123,7 +124,7 @@ knitr::kable(
 
 1. The different percent poc groups assigned to the school districts are of drastically different sizes. Due to the predominant whiteness of Massachuesetts, there are few school districts with over 50% poc students.
 
-2. Percent of students taking the sat seems small for all school districts because I divided the number of students who took the SAT by the total students in the district.
+2. Percent of students taking the SAT seems small for all school districts because I divided the number of students who took the SAT by the total students in the district.
 
 3. Data represents only public schools.
 
@@ -134,7 +135,8 @@ little difference is seen amongst different percent groups. Could represent good
 ```{r, echo=FALSE}
 ggplot(proportion_data_wclass,aes(x = percent_poc, y = Average.Salary, color=percent_poc) )+
   geom_boxplot()+
-  scale_x_discrete(limits = c(" <5%",">5% & <30%",">30% & <50%",">50%"))
+  scale_x_discrete(limits = c(" <5%",">5% & <30%",">30% & <50%",">50%"))+
+  labs(x= "% POC", y= "Average Salary")
 ```
 
 ## Students in Art Classes
@@ -145,7 +147,8 @@ Data does show a slight decrease in percent of students in art classes in higher
 ```{r, echo=FALSE}
 ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_students_in_art, color=percent_poc))+
   geom_boxplot()+
-  scale_x_discrete(limits = c(" <5%",">5% & <30%",">30% & <50%",">50%"))
+  scale_x_discrete(limits = c(" <5%",">5% & <30%",">30% & <50%",">50%"))+
+  labs(x= "% POC", y= "% Students in Art")
 ```
 
 ## Students That Take The SAT
@@ -156,7 +159,8 @@ Similar to the previous graph, there is a slight decreases with higher percentil
 ```{r, echo=FALSE}
 ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_take_sat, color=percent_poc) )+
   geom_boxplot()+
-  scale_x_discrete(limits = c(" <5%",">5% & <30%",">30% & <50%",">50%"))
+  scale_x_discrete(limits = c(" <5%",">5% & <30%",">30% & <50%",">50%"))+
+  labs(x= "% POC", y= "% of Students That Take The SAT")
 ```
 
 ## Further Breakdown of SAT Participation
@@ -164,7 +168,8 @@ ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_take_sat, color=p
 ```{r, echo=FALSE, message=FALSE}
 ggplot(proportion_data_wclass,aes(x = percent_black_hispanic, y = percent_take_sat) )+
   geom_point(mapping =aes(color=percent_poc)) +
-  geom_smooth()
+  geom_smooth()+
+  labs(x= "% POC", y= "% of Students That Take The SAT")
 ```
 
 ## Student Discipline
@@ -174,7 +179,8 @@ This represents any noted discipline; severity of disciplinary action is not a f
 ```{r, echo=FALSE}
 ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_disciplined, color=percent_poc) )+
   geom_boxplot()+
-  scale_x_discrete(limits = c(" <5%",">5% & <30%",">30% & <50%",">50%"))
+  scale_x_discrete(limits = c(" <5%",">5% & <30%",">30% & <50%",">50%"))+
+  labs(x= "% POC", y= "% of Students Disciplined")
 ```
 
 ## Further Breakdown of Disciplinary Action
@@ -182,7 +188,8 @@ ggplot(proportion_data_wclass,aes(x = percent_poc, y = percent_disciplined, colo
 ```{r, echo=FALSE, message=FALSE}
 ggplot(proportion_data_wclass,aes(x = percent_black_hispanic, y = percent_disciplined) )+
   geom_point(mapping =aes(color=percent_poc)) +
-  geom_smooth()
+  geom_smooth()+
+  labs(x= "% POC", y= "% of Students Disciplined")
 ```
 
 ## Conclusion
